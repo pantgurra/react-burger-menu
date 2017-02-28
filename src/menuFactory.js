@@ -22,6 +22,7 @@ export default (styles) => {
       outerContainerId: styles && styles.outerContainer ? React.PropTypes.string.isRequired : React.PropTypes.string,
       pageWrapId: styles && styles.pageWrap ? React.PropTypes.string.isRequired : React.PropTypes.string,
       right: React.PropTypes.bool,
+      bottom: React.PropTypes.bool,
       styles: React.PropTypes.object,
       width: React.PropTypes.number
     },
@@ -81,7 +82,7 @@ export default (styles) => {
         return;
       }
 
-      const builtStyles = wrapperStyles(this.state.isOpen, this.props.width, this.props.right);
+      const builtStyles = wrapperStyles(this.state.isOpen, this.props.width, this.props.right, this.props.bottom);
 
       for (const prop in builtStyles) {
         if (builtStyles.hasOwnProperty(prop)) {
@@ -100,11 +101,11 @@ export default (styles) => {
       const propName = 'bm' + el.replace(el.charAt(0), el.charAt(0).toUpperCase());
 
       // Set base styles.
-      let output = baseStyles[el] ? [baseStyles[el](this.state.isOpen, this.props.width, this.props.right)] : [];
+      let output = baseStyles[el] ? [baseStyles[el](this.state.isOpen, this.props.width, this.props.right, this.props.bottom)] : [];
 
       // Add animation-specific styles.
       if (styles[el]) {
-        output.push(styles[el](this.state.isOpen, this.props.width, this.props.right, index + 1));
+        output.push(styles[el](this.state.isOpen, this.props.width, this.props.right, this.props.bottom, index + 1));
       }
 
       // Add custom styles.
