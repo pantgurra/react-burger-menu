@@ -225,14 +225,15 @@ var styles = {
                 transition: isOpen ? 'opacity 0.3s' : 'opacity 0.3s, transform 0s 0.3s'
             };
         },
-        menuWrap: function menuWrap(isOpen, width, right) {
+        menuWrap: function menuWrap(isOpen, width, right, bottom) {
             return {
                 position: 'fixed',
                 right: right ? 0 : 'inherit',
+                bottom: bottom ? 0 : 'inherit',
                 zIndex: 2,
-                width: width,
+                width: width === 100 ? '100%' : width,
                 height: '100%',
-                transform: isOpen ? '' : right ? 'translate3d(100%, 0, 0)' : 'translate3d(-100%, 0, 0)',
+                transform: isOpen ? '' : right ? 'translate3d(100%, 0, 0)' : bottom ? 'translate3d(0, 100%, 0)' : 'translate3d(-100%, 0, 0)',
                 transition: 'all 0.5s'
             };
         },
@@ -293,6 +294,7 @@ exports['default'] = function (styles) {
             outerContainerId: styles && styles.outerContainer ? _react2['default'].PropTypes.string.isRequired : _react2['default'].PropTypes.string,
             pageWrapId: styles && styles.pageWrap ? _react2['default'].PropTypes.string.isRequired : _react2['default'].PropTypes.string,
             right: _react2['default'].PropTypes.bool,
+            bottom: _react2['default'].PropTypes.bool,
             styles: _react2['default'].PropTypes.object,
             width: _react2['default'].PropTypes.number
         },
@@ -335,7 +337,7 @@ exports['default'] = function (styles) {
                 console.error('Element with ID \'' + id + '\' not found');
                 return;
             }
-            var builtStyles = wrapperStyles(this.state.isOpen, this.props.width, this.props.right);
+            var builtStyles = wrapperStyles(this.state.isOpen, this.props.width, this.props.right, this.props.bottom);
             for (var prop in builtStyles) {
                 if (builtStyles.hasOwnProperty(prop)) {
                     wrapper.style[prop] = set ? builtStyles[prop] : '';
@@ -350,9 +352,9 @@ exports['default'] = function (styles) {
         },
         getStyles: function getStyles(el, index, inline) {
             var propName = 'bm' + el.replace(el.charAt(0), el.charAt(0).toUpperCase());
-            var output = _baseStyles2['default'][el] ? [_baseStyles2['default'][el](this.state.isOpen, this.props.width, this.props.right)] : [];
+            var output = _baseStyles2['default'][el] ? [_baseStyles2['default'][el](this.state.isOpen, this.props.width, this.props.right, this.props.bottom)] : [];
             if (styles[el]) {
-                output.push(styles[el](this.state.isOpen, this.props.width, this.props.right, index + 1));
+                output.push(styles[el](this.state.isOpen, this.props.width, this.props.right, this.props.bottom, index + 1));
             }
             if (this.props.styles[propName]) {
                 output.push(this.props.styles[propName]);
