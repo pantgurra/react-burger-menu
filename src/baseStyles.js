@@ -22,8 +22,8 @@ let styles = {
       bottom: bottom ? 0 : 'inherit',
       zIndex: 2,
       width: width === 100 ? '100%' : width,
-      height: '100%',
-      transform: isOpen ? '' : right ? 'translate3d(100%, 0, 0)' : bottom ? 'translate3d(0, 100%, 0)' : 'translate3d(-100%, 0, 0)',
+      height: '100vh',
+      transform: isOpen ? '' : right ? 'translate3d(100%, 0, 0)' : bottom ? 'translate3d(0, 100vh, 0)' : 'translate3d(-100%, 0, 0)',
       transition: 'all 0.5s'
     };
   },

@@ -1,4 +1,65 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.BurgerMenu = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports = function(opts) {
+  return new ElementClass(opts)
+}
+
+function indexOf(arr, prop) {
+  if (arr.indexOf) return arr.indexOf(prop)
+  for (var i = 0, len = arr.length; i < len; i++)
+    if (arr[i] === prop) return i
+  return -1
+}
+
+function ElementClass(opts) {
+  if (!(this instanceof ElementClass)) return new ElementClass(opts)
+  var self = this
+  if (!opts) opts = {}
+
+  // similar doing instanceof HTMLElement but works in IE8
+  if (opts.nodeType) opts = {el: opts}
+
+  this.opts = opts
+  this.el = opts.el || document.body
+  if (typeof this.el !== 'object') this.el = document.querySelector(this.el)
+}
+
+ElementClass.prototype.add = function(className) {
+  var el = this.el
+  if (!el) return
+  if (el.className === "") return el.className = className
+  var classes = el.className.split(' ')
+  if (indexOf(classes, className) > -1) return classes
+  classes.push(className)
+  el.className = classes.join(' ')
+  return classes
+}
+
+ElementClass.prototype.remove = function(className) {
+  var el = this.el
+  if (!el) return
+  if (el.className === "") return
+  var classes = el.className.split(' ')
+  var idx = indexOf(classes, className)
+  if (idx > -1) classes.splice(idx, 1)
+  el.className = classes.join(' ')
+  return classes
+}
+
+ElementClass.prototype.has = function(className) {
+  var el = this.el
+  if (!el) return
+  var classes = el.className.split(' ')
+  return indexOf(classes, className) > -1
+}
+
+ElementClass.prototype.toggle = function(className) {
+  var el = this.el
+  if (!el) return
+  if (this.has(className)) this.remove(className)
+  else this.add(className)
+}
+
+},{}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -97,7 +158,7 @@ var BurgerIcon = (0, _radium2['default'])(_react2['default'].createClass({
 exports['default'] = BurgerIcon;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports['default'] = {
@@ -112,7 +173,7 @@ exports['default'] = {
     fallDown: require('./menus/fallDown')
 };
 module.exports = exports['default'];
-},{"./menus/bubble":6,"./menus/elastic":7,"./menus/fallDown":8,"./menus/push":9,"./menus/pushRotate":10,"./menus/scaleDown":11,"./menus/scaleRotate":12,"./menus/slide":13,"./menus/stack":14}],3:[function(require,module,exports){
+},{"./menus/bubble":7,"./menus/elastic":8,"./menus/fallDown":9,"./menus/push":10,"./menus/pushRotate":11,"./menus/scaleDown":12,"./menus/scaleRotate":13,"./menus/slide":14,"./menus/stack":15}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -209,7 +270,7 @@ var CrossIcon = (0, _radium2['default'])(_react2['default'].createClass({
 exports['default'] = CrossIcon;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 var styles = {
@@ -232,8 +293,8 @@ var styles = {
                 bottom: bottom ? 0 : 'inherit',
                 zIndex: 2,
                 width: width === 100 ? '100%' : width,
-                height: '100%',
-                transform: isOpen ? '' : right ? 'translate3d(100%, 0, 0)' : bottom ? 'translate3d(0, 100%, 0)' : 'translate3d(-100%, 0, 0)',
+                height: '100vh',
+                transform: isOpen ? '' : right ? 'translate3d(100%, 0, 0)' : bottom ? 'translate3d(0, 100vh, 0)' : 'translate3d(-100%, 0, 0)',
                 transition: 'all 0.5s'
             };
         },
@@ -256,7 +317,7 @@ var styles = {
     };
 exports['default'] = styles;
 module.exports = exports['default'];
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -269,6 +330,8 @@ var _reactDom = typeof window !== 'undefined' ? window['ReactDOM'] : typeof glob
 var _reactDom2 = _interopRequireDefault(_reactDom);
 var _radium = typeof window !== 'undefined' ? window['Radium'] : typeof global !== 'undefined' ? global['Radium'] : null;
 var _radium2 = _interopRequireDefault(_radium);
+var _elementClass = require('element-class');
+var _elementClass2 = _interopRequireDefault(_elementClass);
 var _baseStyles = require('./baseStyles');
 var _baseStyles2 = _interopRequireDefault(_baseStyles);
 var _BurgerIcon = require('./BurgerIcon');
@@ -307,8 +370,10 @@ exports['default'] = function (styles) {
                 _this.timeoutId && clearTimeout(_this.timeoutId);
                 _this.timeoutId = setTimeout(function () {
                     _this.timeoutId = null;
+                    (0, _elementClass2['default'])(document.body).add('ReactBurgerMenu__Body--open');
                     if (!newState.isOpen) {
                         _this.clearWrapperStyles();
+                        (0, _elementClass2['default'])(document.body).remove('ReactBurgerMenu__Body--open');
                     }
                 }, 500);
             });
@@ -471,7 +536,7 @@ exports['default'] = function (styles) {
 };
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./BurgerIcon":1,"./CrossIcon":3,"./baseStyles":4}],6:[function(require,module,exports){
+},{"./BurgerIcon":2,"./CrossIcon":4,"./baseStyles":5,"element-class":1}],7:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -546,7 +611,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5,"../snapsvgImporter":15}],7:[function(require,module,exports){
+},{"../menuFactory":6,"../snapsvgImporter":16}],8:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -613,7 +678,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5,"../snapsvgImporter":15}],8:[function(require,module,exports){
+},{"../menuFactory":6,"../snapsvgImporter":16}],9:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -644,7 +709,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5}],9:[function(require,module,exports){
+},{"../menuFactory":6}],10:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -665,7 +730,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5}],10:[function(require,module,exports){
+},{"../menuFactory":6}],11:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -691,7 +756,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5}],11:[function(require,module,exports){
+},{"../menuFactory":6}],12:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -714,7 +779,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5}],12:[function(require,module,exports){
+},{"../menuFactory":6}],13:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -740,7 +805,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5}],13:[function(require,module,exports){
+},{"../menuFactory":6}],14:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -751,7 +816,7 @@ var _menuFactory2 = _interopRequireDefault(_menuFactory);
 var styles = {};
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5}],14:[function(require,module,exports){
+},{"../menuFactory":6}],15:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 function _interopRequireDefault(obj) {
@@ -776,7 +841,7 @@ var styles = {
     };
 exports['default'] = (0, _menuFactory2['default'])(styles);
 module.exports = exports['default'];
-},{"../menuFactory":5}],15:[function(require,module,exports){
+},{"../menuFactory":6}],16:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports['default'] = function () {
@@ -788,5 +853,5 @@ exports['default'] = function () {
     }
 };
 module.exports = exports['default'];
-},{"snapsvg-cjs":undefined}]},{},[2])(2)
+},{"snapsvg-cjs":undefined}]},{},[3])(3)
 });

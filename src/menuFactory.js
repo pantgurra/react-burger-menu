@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Radium from 'radium';
+import elementClass from 'element-class';
 import baseStyles from './baseStyles';
 import BurgerIcon from './BurgerIcon';
 import CrossIcon from './CrossIcon';
@@ -29,7 +30,6 @@ export default (styles) => {
 
     toggleMenu() {
       const newState = { isOpen: !this.state.isOpen };
-
       this.applyWrapperStyles();
 
       this.setState(newState, () => {
@@ -39,8 +39,10 @@ export default (styles) => {
         this.timeoutId && clearTimeout(this.timeoutId);
         this.timeoutId = setTimeout(() => {
           this.timeoutId = null;
+          elementClass(document.body).add('ReactBurgerMenu__Body--open');
           if (!newState.isOpen) {
             this.clearWrapperStyles();
+            elementClass(document.body).remove('ReactBurgerMenu__Body--open');
           }
         }, 500);
       });
